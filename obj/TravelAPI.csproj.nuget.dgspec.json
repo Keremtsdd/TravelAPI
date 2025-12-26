@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\tastk\\OneDrive\\Desktop\\TravelAPI-main\\TravelAPI.csproj": {}
+    "C:\\Users\\tastk\\OneDrive\\Documents\\GitHub\\aaaa\\TravelAPI.csproj": {}
   },
   "projects": {
-    "C:\\Users\\tastk\\OneDrive\\Desktop\\TravelAPI-main\\TravelAPI.csproj": {
+    "C:\\Users\\tastk\\OneDrive\\Documents\\GitHub\\aaaa\\TravelAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\tastk\\OneDrive\\Desktop\\TravelAPI-main\\TravelAPI.csproj",
+        "projectUniqueName": "C:\\Users\\tastk\\OneDrive\\Documents\\GitHub\\aaaa\\TravelAPI.csproj",
         "projectName": "TravelAPI",
-        "projectPath": "C:\\Users\\tastk\\OneDrive\\Desktop\\TravelAPI-main\\TravelAPI.csproj",
+        "projectPath": "C:\\Users\\tastk\\OneDrive\\Documents\\GitHub\\aaaa\\TravelAPI.csproj",
         "packagesPath": "C:\\Users\\tastk\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\tastk\\OneDrive\\Desktop\\TravelAPI-main\\obj\\",
+        "outputPath": "C:\\Users\\tastk\\OneDrive\\Documents\\GitHub\\aaaa\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

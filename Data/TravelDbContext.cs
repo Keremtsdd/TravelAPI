@@ -12,6 +12,7 @@ namespace TravelAPI.Data
         public DbSet<Place> Places => Set<Place>();
         public DbSet<User> Users => Set<User>();
         public DbSet<Feedback> Feedbacks => Set<Feedback>();
+        public DbSet<AppUser> AppUsers => Set<AppUser>();
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Country>()
