@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TravelAPI.Data;
 using TravelAPI.DTOs.Admin;
+using TravelAPI.Services;
+using TravelAPI.Generate;
 
 [ApiController]
 [Route("admin/auth")]
@@ -30,7 +32,7 @@ public class AdminAuthController : ControllerBase
         if (!BCrypt.Net.BCrypt.Verify(dto.Password, admin.PasswordHash))
             return Unauthorized("Hatalı KullanıcıAdı veya Şifre");
 
-        var token = _jwtService.GenerateToken(admin);
+        var token = _jwtService.GenerateAdminToken(admin);
 
         return Ok(new { token, userName = admin.UserName, role = admin.Role });
     }

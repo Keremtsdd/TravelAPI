@@ -1,3 +1,5 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TravelAPI.Data;
@@ -51,6 +53,30 @@ namespace TravelAPI.Controllers.User
                     user.Email,
                     user.Name
                 }
+            });
+        }
+
+        [Authorize]
+        [HttpDelete("deleteaccount")]
+        public async Task<IActionResult> DeleteAccount()
+        {
+            var userId = Guid.Parse(
+                User.FindFirstValue(ClaimTypes.NameIdentifier)!
+            );
+
+            var user = await _context.AppUsers
+            .FirstOrDefaultAsync(c => c.Id == userId);
+
+            if (user == null)
+                return NotFound("Kullanıcı Bulunamadı");
+
+            _context.AppUsers.Remove(user);
+            await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                success = true,
+                message = "Hesap başarıyla silindi"
             });
         }
     }

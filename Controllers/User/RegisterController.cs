@@ -82,7 +82,7 @@ namespace TravelAPI.Controllers.User
 
         }
 
-        [HttpGet]
+        [HttpGet("registered")]
         public async Task<IActionResult> GetUsers()
         {
             var users = await _context.AppUsers
