@@ -8,7 +8,7 @@ using TravelAPI.Models;
 namespace TravelAPI.Controllers.User
 {
     [ApiController]
-    [Route("auth/register")]
+    [Route("auth")]
     public class RegisterController : ControllerBase
     {
         private readonly TravelDbContext _context;
@@ -74,7 +74,34 @@ namespace TravelAPI.Controllers.User
 
             await _context.SaveChangesAsync();
 
-            return Ok("Kayıt Tamamlandı!");
+            return Ok(new
+            {
+                success = true,
+                message = "Kayıt tamamlandı"
+            });
+
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetUsers()
+        {
+            var users = await _context.AppUsers
+            .OrderByDescending(c => c.CreatedAt)
+            .Select(c => new AppUserListDto
+            {
+                Id = c.Id,
+                Email = c.Email,
+                Name = c.Name,
+                BirthDate = c.BirthDate,
+                EmailConfirmed = c.EmailConfirmed,
+                CreatedAt = c.CreatedAt,
+            }).ToListAsync();
+
+            return Ok(new
+            {
+                success = true,
+                data = users
+            });
         }
     }
 }
