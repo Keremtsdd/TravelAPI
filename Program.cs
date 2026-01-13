@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using TravelAPI.Data;
 using TravelAPI.Models;
+using TravelAPI.Profiles;
 using TravelAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -55,6 +56,10 @@ builder.Services.AddAuthorization();
 
 #region Services
 builder.Services.AddScoped<JwtService>();
+#endregion
+
+#region 
+builder.Services.AddAutoMapper(typeof(MapProfile));
 #endregion
 
 #region Controllers & Swagger

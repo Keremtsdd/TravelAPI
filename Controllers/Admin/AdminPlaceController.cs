@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,33 +14,25 @@ namespace TravelAPI.Controllers.Admin
     public class AdminPlaceController : ControllerBase
     {
         private readonly TravelDbContext _context;
+        private readonly IMapper _mapper;
 
-        public AdminPlaceController(TravelDbContext context)
+        public AdminPlaceController(TravelDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         [HttpPost] // Mekan Ekle
         public async Task<IActionResult> CreatePlace(CreatePlaceDto dto)
         {
-            var city = await _context.Cities.AnyAsync(c => c.Id == dto.CityId);
+            var cityExists = await _context.Cities.AnyAsync(c => c.Id == dto.CityId);
 
-            if (!city)
+            if (!cityExists)
                 return NotFound("Şehir Bulunamadı!");
 
-            var place = new Place
-            {
-                Id = Guid.NewGuid(),
-                Name = dto.Name,
-                Description = dto.Description,
-                Image = dto.Image,
-                Longitude = dto.Longitude,
-                Latitude = dto.Latitude,
-                Category = dto.Category,
-                IsPopular = dto.IsPopular,
-                Rating = dto.Rating,
-                CityId = dto.CityId
-            };
+            var place = _mapper.Map<Place>(dto);
+            place.Id = Guid.NewGuid();
+
             _context.Places.Add(place);
             await _context.SaveChangesAsync();
 
@@ -59,14 +52,7 @@ namespace TravelAPI.Controllers.Admin
             if (place == null)
                 return NotFound("Mekan Bulunamadı!");
 
-            place.Name = dto.Name;
-            place.Description = dto.Description;
-            place.Image = dto.Image;
-            place.Longitude = dto.Longitude;
-            place.Latitude = dto.Latitude;
-            place.Category = dto.Category;
-            place.IsPopular = dto.IsPopular;
-            place.Rating = dto.Rating;
+            _mapper.Map(dto, place);
 
             await _context.SaveChangesAsync();
 
@@ -94,25 +80,25 @@ namespace TravelAPI.Controllers.Admin
                 success = true,
                 message = "Mekan Silindi"
             });
-
         }
 
         [HttpGet("bycity/{cityId}")] // Şehre Göre Mekanları Sırala
         public async Task<IActionResult> GetByCityId(Guid cityId)
         {
-            var place = await _context.Places.AnyAsync(c => c.CityId == cityId);
-            if (!place)
+            var cityExists = await _context.Places.AnyAsync(c => c.CityId == cityId);
+            if (!cityExists)
                 return NotFound("Şehir Bulunamadı!");
 
-            var result = await _context.Places
+            var places = await _context.Places
            .Where(p => p.CityId == cityId)
            .ToListAsync();
 
+            var result = _mapper.Map<List<PlaceListDto>>(places);
             return Ok(new
             {
                 success = true,
                 message = "ID'ye Göre Mekanlar",
-                data = place
+                data = result
             });
         }
     }

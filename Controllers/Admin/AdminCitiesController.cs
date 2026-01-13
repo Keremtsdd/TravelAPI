@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,10 +15,12 @@ namespace TravelAPI.Controllers.Admin
     public class AdminCitiesController : ControllerBase
     {
         private readonly TravelDbContext _context;
+        private readonly IMapper _mapper;
 
-        public AdminCitiesController(TravelDbContext context)
+        public AdminCitiesController(TravelDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         [HttpPost] // Şehir Ekleme
@@ -28,14 +31,8 @@ namespace TravelAPI.Controllers.Admin
             if (!country)
                 return NotFound("Ülke Bulunamadı!");
 
-            var city = new City
-            {
-                Id = Guid.NewGuid(),
-                CountryId = dto.CountryId,
-                Name = dto.Name,
-                Description = dto.Description,
-                Image = dto.Image
-            };
+            var city = _mapper.Map<City>(dto);
+            city.Id = Guid.NewGuid();
 
             _context.Cities.Add(city);
             await _context.SaveChangesAsync();
@@ -56,12 +53,8 @@ namespace TravelAPI.Controllers.Admin
             if (city == null)
                 return NotFound("Şehir Bulunamadı!");
 
-            city.Name = dto.Name;
-            city.Description = dto.Description;
-            city.Image = dto.Image;
-
+            _mapper.Map(dto, city);
             await _context.SaveChangesAsync();
-
             return Ok(new
             {
                 success = true,
@@ -92,14 +85,12 @@ namespace TravelAPI.Controllers.Admin
         [HttpGet("select/{countryId}")] // Ülkeye Ait Şehirleri Getirme (Dropdown İçin)
         public async Task<IActionResult> GetCitiesForSelect(Guid countryId)
         {
-            var result = await _context.Cities
+            var cities = await _context.Cities
                 .Where(c => c.CountryId == countryId)
-                .Select(c => new CitySelectDto
-                {
-                    Id = c.Id,
-                    Name = c.Name
-                }).OrderBy(c => c.Name)
+                .OrderBy(c => c.Name)
                 .ToListAsync();
+
+            var result = _mapper.Map<List<CitySelectDto>>(cities);
 
             return Ok(new
             {
@@ -112,12 +103,9 @@ namespace TravelAPI.Controllers.Admin
         [HttpGet] // Tüm Şehirleri Getirme
         public async Task<IActionResult> GetAllCities()
         {
-            var result = await _context.Cities.Select(c => new CityListDto
-            {
-                Id = c.Id,
-                CountryId = c.CountryId,
-                Name = c.Name,
-            }).ToListAsync();
+            var cities = await _context.Cities.ToListAsync();
+
+            var result = _mapper.Map<List<CityListDto>>(cities);
 
             return Ok(new
             {
@@ -137,18 +125,15 @@ namespace TravelAPI.Controllers.Admin
 
             var cities = await _context.Cities
             .Where(c => c.CountryId == countryId)
-            .Select(c => new CityListDto
-            {
-                Id = c.Id,
-                CountryId = c.CountryId,
-                Name = c.Name,
-            }).ToListAsync();
+            .ToListAsync();
+
+            var result = _mapper.Map<List<CityListDto>>(cities);
 
             return Ok(new
             {
                 success = true,
                 message = "Ülkeye Ait Şehirler",
-                data = cities
+                data = result
             });
         }
     }

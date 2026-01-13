@@ -1,6 +1,8 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TravelAPI.Data;
+using TravelAPI.DTOs.City;
 
 namespace TravelAPI.Controllers.Public
 {
@@ -8,9 +10,11 @@ namespace TravelAPI.Controllers.Public
     public class CitiesController : ControllerBase
     {
         private readonly TravelDbContext _context;
-        public CitiesController(TravelDbContext context)
+        private readonly IMapper _mapper;
+        public CitiesController(TravelDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         [HttpGet("countries/{countryId}/cities")] // Ülkeye Göre Şehirleri Getirme
@@ -21,7 +25,9 @@ namespace TravelAPI.Controllers.Public
             .AsNoTracking()
             .ToListAsync();
 
-            return Ok(cities);
+            var result = _mapper.Map<List<CityListDto>>(cities);
+
+            return Ok(result);
         }
 
         [HttpGet("cities/{id}")] // Şehri ID'ye Göre Getirme
@@ -32,7 +38,9 @@ namespace TravelAPI.Controllers.Public
             if (city == null)
                 return NotFound("Şehir Bulunamadı!");
 
-            return Ok(city);
+            var result = _mapper.Map<CityListDto>(city);
+
+            return Ok(result);
         }
     }
 }

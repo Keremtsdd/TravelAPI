@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using TravelAPI.Data;
 using TravelAPI.DTOs.Feedback;
@@ -10,10 +11,12 @@ namespace TravelAPI.Controllers.Public
     public class FeedbackController : ControllerBase
     {
         private readonly TravelDbContext _context;
+        private readonly IMapper _mapper;
 
-        public FeedbackController(TravelDbContext context)
+        public FeedbackController(TravelDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         [HttpPost]
@@ -28,14 +31,9 @@ namespace TravelAPI.Controllers.Public
                 });
             }
 
-            var feedback = new Feedback
-            {
-                Id = Guid.NewGuid(),
-                Type = (FeedbackType)dto.Type,
-                Subject = dto.Subject,
-                Message = dto.Message,
-                CreatedAt = DateTime.UtcNow
-            };
+            var feedback = _mapper.Map<Feedback>(dto);
+            feedback.Id = Guid.NewGuid();
+            feedback.CreatedAt = DateTime.UtcNow;
 
             _context.Feedbacks.Add(feedback);
             await _context.SaveChangesAsync();

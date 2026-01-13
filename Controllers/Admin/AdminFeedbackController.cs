@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,9 +13,11 @@ namespace TravelAPI.Controllers.Admin
     public class AdminFeedbackController : ControllerBase
     {
         private readonly TravelDbContext _context;
-        public AdminFeedbackController(TravelDbContext context)
+        private readonly IMapper _mapper;
+        public AdminFeedbackController(TravelDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -22,20 +25,15 @@ namespace TravelAPI.Controllers.Admin
         {
             var feedbackList = await _context.Feedbacks
             .OrderByDescending(c => c.CreatedAt)
-            .Select(c => new FeedbackListDto
-            {
-                Id = c.Id,
-                Type = c.Type.ToString(),
-                Subject = c.Subject,
-                IsRead = c.IsRead,
-                CreatedAt = c.CreatedAt,
-            }).ToListAsync();
+            .ToListAsync();
+
+            var result = _mapper.Map<List<FeedbackListDto>>(feedbackList);
 
             return Ok(new
             {
                 success = true,
                 message = "Öneri Ve Şikayerler",
-                data = feedbackList
+                data = result
             });
         }
 
@@ -46,11 +44,13 @@ namespace TravelAPI.Controllers.Admin
             .Where(c => (int)c.Type == type)
             .ToListAsync();
 
+            var result = _mapper.Map<List<FeedbackListDto>>(list);
+
             return Ok(new
             {
                 success = true,
                 message = "ID'ye Göre Öneri ve Şikayetler",
-                data = list
+                data = result
             });
         }
 

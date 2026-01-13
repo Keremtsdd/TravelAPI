@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TravelAPI.Data;
@@ -11,24 +12,28 @@ namespace TravelAPI.Controllers.Public
     public class PlaceController : ControllerBase
     {
         private readonly TravelDbContext _context;
+        private readonly IMapper _mapper;
 
-        public PlaceController(TravelDbContext context)
+        public PlaceController(TravelDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         [HttpGet("bycity/{cityId}")] // Şehre Göre Mekanları Sırala
         public async Task<IActionResult> GetPlacesByCity(Guid cityId)
         {
-            var result = await _context.Cities.AnyAsync(c => c.Id == cityId);
-            if (!result)
+            var cityExists = await _context.Cities.AnyAsync(c => c.Id == cityId);
+            if (!cityExists)
                 return NotFound("Şehir Bulunamadı");
 
             var places = await _context.Places
             .Where(c => c.CityId == cityId)
             .ToListAsync();
 
-            return Ok(places);
+            var result = _mapper.Map<List<PlaceListDto>>(places);
+
+            return Ok(result);
         }
 
         [HttpGet("popular")] // Popüler Mekanları Getir
@@ -38,9 +43,12 @@ namespace TravelAPI.Controllers.Public
             .Where(p => p.IsPopular)
             .OrderByDescending(p => p.Rating)
             .Take(10)
+            .AsNoTracking()
             .ToListAsync();
 
-            return Ok(places);
+            var result = _mapper.Map<List<PlaceListDto>>(places);
+
+            return Ok(result);
         }
 
         [HttpGet("{id}")] // ID'ye Göre Mekan Detayını Getir
@@ -48,31 +56,29 @@ namespace TravelAPI.Controllers.Public
         {
             var place = await _context.Places
             .Include(c => c.City)
+            .AsNoTracking()
             .FirstOrDefaultAsync(c => c.Id == id);
 
             if (place == null)
                 return NotFound("Mekan Bulunamadı");
 
-            return Ok(place);
+            var result = _mapper.Map<PlaceListDto>(place);
+            return Ok(result);
         }
 
-        [HttpGet("popularCards")]
+        [HttpGet("popularCards")] // Kart Görünümü İçin Minimal Veri
         public async Task<IActionResult> PlaceCard()
         {
             var places = await _context.Places
                 .Where(p => p.IsPopular)
                 .OrderByDescending(p => p.Rating)
                 .Take(10)
-                .Select(p => new PlaceCardDto
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    Image = p.Image,
-                    Rating = p.Rating
-                })
+                .AsNoTracking()
                 .ToListAsync();
 
-            return Ok(places);
+            var result = _mapper.Map<List<PlaceCardDto>>(places);
+
+            return Ok(result);
         }
     }
 }

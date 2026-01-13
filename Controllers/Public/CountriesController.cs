@@ -1,6 +1,8 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TravelAPI.Data;
+using TravelAPI.DTOs.Country;
 
 namespace TravelAPI.Controllers.Public
 {
@@ -9,10 +11,12 @@ namespace TravelAPI.Controllers.Public
     public class CountriesController : ControllerBase
     {
         private readonly TravelDbContext _context;
+        private readonly IMapper _mapper;
 
-        public CountriesController(TravelDbContext context)
+        public CountriesController(TravelDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         [HttpGet] // Keşfet - Tüm Ülkeler
@@ -22,7 +26,9 @@ namespace TravelAPI.Controllers.Public
             .AsNoTracking()
             .ToListAsync();
 
-            return Ok(countries);
+            var result = _mapper.Map<List<CountrySelectDto>>(countries);
+
+            return Ok(result);
         }
 
         [HttpGet("popular")] // Popüler Ülkeler
@@ -33,7 +39,9 @@ namespace TravelAPI.Controllers.Public
             .AsNoTracking()
             .ToListAsync();
 
-            return Ok(popularCountries);
+            var result = _mapper.Map<List<CountrySelectDto>>(popularCountries);
+
+            return Ok(result);
         }
 
 
@@ -48,7 +56,9 @@ namespace TravelAPI.Controllers.Public
             if (country == null)
                 return NotFound();
 
-            return Ok(country);
+            var result = _mapper.Map<CountrySelectDto>(country);
+
+            return Ok(result);
         }
     }
 }

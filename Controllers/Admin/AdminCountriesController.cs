@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,10 +14,12 @@ namespace TravelAPI.Controllers.Admin
     public class AdminCountriesController : ControllerBase
     {
         private readonly TravelDbContext _context;
+        private readonly IMapper _mapper;
 
-        public AdminCountriesController(TravelDbContext context)
+        public AdminCountriesController(TravelDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         [HttpPost] // Ülke Ekle
@@ -28,16 +31,8 @@ namespace TravelAPI.Controllers.Admin
             if (exists)
                 return BadRequest("Bu Ülke Zaten Mevcut!");
 
-            var country = new Country
-            {
-                Id = Guid.NewGuid(),
-                ExternalId = dto.ExternalCountryId,
-                Name = dto.Name,
-                Description = dto.Description,
-                Image = dto.Image,
-                IsPopular = dto.IsPopular,
-
-            };
+            var country = _mapper.Map<Country>(dto);
+            country.Id = Guid.NewGuid();
 
             _context.Countries.Add(country);
             await _context.SaveChangesAsync();
@@ -89,10 +84,7 @@ namespace TravelAPI.Controllers.Admin
             if (country == null)
                 return NotFound("Ülke Bulunamadı!");
 
-            country.Name = dto.Name;
-            country.Description = dto.Description;
-            country.Image = dto.Image;
-            country.IsPopular = dto.IsPopular;
+            _mapper.Map(dto, country);
 
             await _context.SaveChangesAsync();
 
@@ -107,7 +99,7 @@ namespace TravelAPI.Controllers.Admin
         [HttpDelete("{id}")] // Ülke Sil
         public async Task<IActionResult> DeleteCountry(Guid id)
         {
-            var country = await _context.Countries.FirstOrDefaultAsync(c => c.Id == id);
+            var country = await _context.Countries.FindAsync(id);
 
             if (country == null)
                 return NotFound("Ülke Bulunamadı!");
@@ -118,7 +110,7 @@ namespace TravelAPI.Controllers.Admin
             return Ok(new
             {
                 success = true,
-                message = "Şehir Silindi"
+                message = "Ülke Silindi"
             });
 
         }
@@ -126,11 +118,9 @@ namespace TravelAPI.Controllers.Admin
         [HttpGet("select")] // Admin Dropdown için Ülkeler
         public async Task<IActionResult> GetCountriesForSelect()
         {
-            var result = await _context.Countries.Select(c => new CountrySelectDto
-            {
-                Id = c.Id,
-                Name = c.Name,
-            }).OrderBy(c => c.Name).ToListAsync();
+            var countries = await _context.Countries.OrderBy(c => c.Name).ToListAsync();
+
+            var result = _mapper.Map<List<CountrySelectDto>>(countries);
 
             return Ok(new
             {

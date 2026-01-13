@@ -520,3 +520,5 @@ C:\Users\tastk\OneDrive\Documents\GitHub\aaaa\obj\Debug\net9.0\refint\TravelAPI.
 C:\Users\tastk\OneDrive\Documents\GitHub\aaaa\obj\Debug\net9.0\TravelAPI.pdb
 C:\Users\tastk\OneDrive\Documents\GitHub\aaaa\obj\Debug\net9.0\TravelAPI.genruntimeconfig.cache
 C:\Users\tastk\OneDrive\Documents\GitHub\aaaa\obj\Debug\net9.0\ref\TravelAPI.dll
+C:\Users\tastk\OneDrive\Documents\GitHub\aaaa\bin\Debug\net9.0\AutoMapper.dll
+C:\Users\tastk\OneDrive\Documents\GitHub\aaaa\bin\Debug\net9.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll

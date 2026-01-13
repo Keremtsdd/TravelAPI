@@ -1,3 +1,4 @@
+using AutoMapper;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,45 +15,40 @@ namespace TravelAPI.Controllers.User
     {
         private readonly TravelDbContext _context;
         private readonly JwtService _jwtService;
+        private readonly IMapper _mapper;
 
-        public LoginController(TravelDbContext context, JwtService service)
+        public LoginController(TravelDbContext context, JwtService service, IMapper mapper)
         {
             _context = context;
             _jwtService = service;
+            _mapper = mapper;
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto dto)
         {
             var user = await _context.AppUsers
-            .FirstOrDefaultAsync(c => c.Email == dto.Email);
+                .FirstOrDefaultAsync(c => c.Email == dto.Email);
 
             if (user == null)
+                return BadRequest("Email veya Şifre hatalı!");
+
+            var passwordOk = BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash);
+            if (!passwordOk)
                 return BadRequest("Email veya Şifre hatalı!");
 
             if (!user.EmailConfirmed)
                 return BadRequest("Email doğrulanmamış!");
 
-            var passwordOk = BCrypt.Net.BCrypt.Verify(
-                dto.Password,
-                user.PasswordHash
-            );
-
-            if (!passwordOk)
-                return BadRequest("Email veya Şifre hatalı!");
-
             var token = _jwtService.GenerateAppUserToken(user);
+
+            var userDto = _mapper.Map<AppUserListDto>(user);
 
             return Ok(new
             {
                 success = true,
                 token = token,
-                user = new
-                {
-                    user.Id,
-                    user.Email,
-                    user.Name
-                }
+                user = userDto
             });
         }
 
@@ -60,12 +56,15 @@ namespace TravelAPI.Controllers.User
         [HttpDelete("deleteaccount")]
         public async Task<IActionResult> DeleteAccount()
         {
-            var userId = Guid.Parse(
-                User.FindFirstValue(ClaimTypes.NameIdentifier)!
-            );
+            var userIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(userIdStr))
+                return Unauthorized();
+
+            var userId = Guid.Parse(userIdStr);
 
             var user = await _context.AppUsers
-            .FirstOrDefaultAsync(c => c.Id == userId);
+                .FirstOrDefaultAsync(c => c.Id == userId);
 
             if (user == null)
                 return NotFound("Kullanıcı Bulunamadı");
