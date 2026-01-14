@@ -3,6 +3,7 @@ using TravelAPI.DTOs.Auth;
 using TravelAPI.DTOs.City;
 using TravelAPI.DTOs.Country;
 using TravelAPI.DTOs.Feedback;
+using TravelAPI.DTOs.HiddenGems;
 using TravelAPI.DTOs.Place;
 using TravelAPI.Models;
 
@@ -30,6 +31,11 @@ namespace TravelAPI.Profiles
             CreateMap<Place, PlaceListDto>();
             CreateMap<CreatePlaceDto, Place>();
             CreateMap<UpdatePlaceDto, Place>().ReverseMap();
+
+            // HIDDEN GEMS MAPPINGS
+            CreateMap<CreateHiddenGemDto, HiddenGem>();
+            CreateMap<HiddenGem, HiddenGemsListDto>();
+            CreateMap<UpdateHiddenGemDto, HiddenGem>();
 
             // FEEDBACK MAPPINGS
             CreateMap<CreateFeedbackDTO, Feedback>();

@@ -10,6 +10,7 @@ namespace TravelAPI.Data
         public DbSet<Country> Countries => Set<Country>();
         public DbSet<City> Cities => Set<City>();
         public DbSet<Place> Places => Set<Place>();
+        public DbSet<HiddenGem> HiddenGems => Set<HiddenGem>();
         public DbSet<User> Users => Set<User>();
         public DbSet<Feedback> Feedbacks => Set<Feedback>();
         public DbSet<AppUser> AppUsers => Set<AppUser>();

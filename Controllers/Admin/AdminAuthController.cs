@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using TravelAPI.Data;
 using TravelAPI.DTOs.Admin;
 using TravelAPI.Services;
-using TravelAPI.Generate;
 
 [ApiController]
 [Route("admin/auth")]
