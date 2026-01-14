@@ -45,7 +45,7 @@ namespace TravelAPI.Controllers.User
         }
 
         [HttpPost("verify")]
-        public async Task<IActionResult> Verify(VerifyRequest request)
+        public async Task<IActionResult> Verify(VerifyRequestDto request)
         {
             var user = await _context.AppUsers.FirstOrDefaultAsync(c => c.Email == request.Email);
 

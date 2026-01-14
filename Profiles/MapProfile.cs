@@ -44,7 +44,7 @@ namespace TravelAPI.Profiles
             // AUTH && ADMİN MAPPINGS
             CreateMap<AppUser, AppUserListDto>();
             CreateMap<RegisterDto, AppUser>();
-            CreateMap<RegisterRequest, AppUser>();
+            CreateMap<RegisterRequestDto, AppUser>();
         }
     }
 }
