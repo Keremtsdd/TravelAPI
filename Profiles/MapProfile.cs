@@ -2,6 +2,7 @@ using AutoMapper;
 using TravelAPI.DTOs.Auth;
 using TravelAPI.DTOs.City;
 using TravelAPI.DTOs.Country;
+using TravelAPI.DTOs.Favorites;
 using TravelAPI.DTOs.Feedback;
 using TravelAPI.DTOs.HiddenGems;
 using TravelAPI.DTOs.Place;
@@ -38,8 +39,12 @@ namespace TravelAPI.Profiles
             CreateMap<UpdateHiddenGemDto, HiddenGem>();
 
             // FEEDBACK MAPPINGS
-            CreateMap<CreateFeedbackDTO, Feedback>();
             CreateMap<Feedback, FeedbackListDto>();
+            CreateMap<CreateFeedbackDTO, Feedback>();
+
+            // FAVORİTES MAPPINGS
+            CreateMap<Favorites, FavoriteDto>();
+            CreateMap<FavoriteDto, Favorites>();
 
             // AUTH && ADMİN MAPPINGS
             CreateMap<AppUser, AppUserListDto>();
