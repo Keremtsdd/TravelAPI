@@ -10,7 +10,7 @@ namespace TravelAPI.Controllers.Admin
 {
 
     [ApiController]
-    [Route("admin/cities")]
+    [Route("api/[controller]")]
     [Authorize(Roles = "Admin")]
     public class AdminCitiesController : ControllerBase
     {

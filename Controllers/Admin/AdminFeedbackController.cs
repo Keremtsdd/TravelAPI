@@ -8,7 +8,7 @@ using TravelAPI.DTOs.Feedback;
 namespace TravelAPI.Controllers.Admin
 {
     [ApiController]
-    [Route("admin/feedback")]
+    [Route("api/[controller]")]
     [Authorize(Roles = "Admin")]
     public class AdminFeedbackController : ControllerBase
     {

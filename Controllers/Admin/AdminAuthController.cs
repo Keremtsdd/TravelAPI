@@ -7,7 +7,7 @@ using TravelAPI.DTOs.Admin;
 using TravelAPI.Services;
 
 [ApiController]
-[Route("admin/auth")]
+[Route("api/[controller]")]
 public class AdminAuthController : ControllerBase
 {
     private readonly TravelDbContext _context;

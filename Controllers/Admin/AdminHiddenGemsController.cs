@@ -8,7 +8,7 @@ using TravelAPI.Models;
 namespace TravelAPI.Controllers.Admin
 {
     [ApiController]
-    [Route("admin/hiddengems")]
+    [Route("api/[controller]")]
     [Authorize(Roles = "Admin")]
     public class AdminHiddenGemsController : ControllerBase
     {

@@ -19,35 +19,50 @@ builder.Services.AddDbContext<TravelDbContext>(options =>
 );
 #endregion
 
+#region CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy
+            .WithOrigins(
+                "http://localhost:5173" // Vite
+            )
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
+#endregion
+
 #region JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
-{
-    options.Events = new JwtBearerEvents
     {
-        OnAuthenticationFailed = context =>
+        options.Events = new JwtBearerEvents
         {
-            Console.WriteLine("JWT ERROR: " + context.Exception.Message);
-            return Task.CompletedTask;
-        }
-    };
+            OnAuthenticationFailed = context =>
+            {
+                Console.WriteLine("JWT ERROR: " + context.Exception.Message);
+                return Task.CompletedTask;
+            }
+        };
 
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = builder.Configuration["Jwt:Issuer"],
-        ValidAudience = builder.Configuration["Jwt:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)
-        ),
-        RoleClaimType = ClaimTypes.Role,
-        NameClaimType = ClaimTypes.Name
-    };
-});
-
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)
+            ),
+            RoleClaimType = ClaimTypes.Role,
+            NameClaimType = ClaimTypes.Name
+        };
+    });
 #endregion
 
 #region Authorization
@@ -56,9 +71,10 @@ builder.Services.AddAuthorization();
 
 #region Services
 builder.Services.AddScoped<JwtService>();
+builder.Services.AddHttpClient();
 #endregion
 
-#region 
+#region AutoMapper
 builder.Services.AddAutoMapper(typeof(MapProfile));
 #endregion
 
@@ -81,7 +97,7 @@ builder.Services.AddSwaggerGen(c =>
         Scheme = "Bearer",
         BearerFormat = "JWT",
         In = ParameterLocation.Header,
-        Description = "JWT Token giriniz. Örnek:{token}"
+        Description = "Bearer {token}"
     });
 
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -121,6 +137,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseCors("AllowFrontend"); // 🔥 CORS burada
+
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -141,6 +159,7 @@ using (var scope = app.Services.CreateScope())
             PasswordHash = BCrypt.Net.BCrypt.HashPassword("539421"),
             Role = "Admin"
         };
+
         context.Users.Add(admin);
         context.SaveChanges();
     }

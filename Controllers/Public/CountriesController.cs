@@ -7,7 +7,7 @@ using TravelAPI.DTOs.Country;
 namespace TravelAPI.Controllers.Public
 {
     [ApiController]
-    [Route("countries")]
+    [Route("api/[controller]")]
     public class CountriesController : ControllerBase
     {
         private readonly TravelDbContext _context;

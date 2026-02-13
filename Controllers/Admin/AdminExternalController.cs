@@ -7,7 +7,7 @@ using TravelAPI.Services;
 namespace TravelAPI.Controllers.Admin
 {
     [ApiController]
-    [Route("admin/external")]
+    [Route("api/[controller]")]
     [Authorize(Roles = "Admin")]
     public class AdminExternalController : ControllerBase
     {

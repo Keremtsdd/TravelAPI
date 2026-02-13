@@ -6,7 +6,9 @@ using TravelAPI.DTOs.Favorites;
 using TravelAPI.DTOs.Feedback;
 using TravelAPI.DTOs.HiddenGems;
 using TravelAPI.DTOs.Place;
+using TravelAPI.DTOs.CountryWeb;
 using TravelAPI.Models;
+using TravelAPI.DTOs.Travel;
 
 namespace TravelAPI.Profiles
 {
@@ -27,6 +29,11 @@ namespace TravelAPI.Profiles
             CreateMap<UpdateCountryDto, Country>().ReverseMap();
             CreateMap<ExternalCountryDto, Country>().ReverseMap();
 
+            // COUNTRY WEB MAPPINGS
+            CreateMap<CountryWeb, CountryWebDto>().ReverseMap();
+            CreateMap<CountryWebCreateDto, CountryWeb>();
+            CreateMap<CountryWebUpdateDto, CountryWeb>();
+
             // PLACE MAPPINGS
             CreateMap<Place, PlaceCardDto>();
             CreateMap<Place, PlaceListDto>();
@@ -45,6 +52,10 @@ namespace TravelAPI.Profiles
             // FAVORİTES MAPPINGS
             CreateMap<Favorites, FavoriteDto>();
             CreateMap<FavoriteDto, Favorites>();
+
+            // TRİPS MAPPINGS
+            CreateMap<CreateTravelDto, Travel>();
+            CreateMap<UpdateTravelDto, Travel>();
 
             // AUTH && ADMİN MAPPINGS
             CreateMap<AppUser, AppUserListDto>();

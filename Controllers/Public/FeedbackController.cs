@@ -7,7 +7,7 @@ using TravelAPI.Models;
 namespace TravelAPI.Controllers.Public
 {
     [ApiController]
-    [Route("feedback")]
+    [Route("api/[controller]")]
     public class FeedbackController : ControllerBase
     {
         private readonly TravelDbContext _context;

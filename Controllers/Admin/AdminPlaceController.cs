@@ -9,7 +9,7 @@ using TravelAPI.Models;
 namespace TravelAPI.Controllers.Admin
 {
     [ApiController]
-    [Route("admin/places")]
+    [Route("api/[controller]")]
     [Authorize(Roles = "Admin")]
     public class AdminPlaceController : ControllerBase
     {

@@ -8,7 +8,7 @@ using TravelAPI.DTOs.Place;
 namespace TravelAPI.Controllers.Public
 {
     [ApiController]
-    [Route("places")]
+    [Route("api/[controller]")]
     public class PlaceController : ControllerBase
     {
         private readonly TravelDbContext _context;

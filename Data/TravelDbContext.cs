@@ -8,12 +8,14 @@ namespace TravelAPI.Data
         public TravelDbContext(DbContextOptions<TravelDbContext> options) : base(options)
         { }
         public DbSet<Country> Countries => Set<Country>();
+        public DbSet<CountryWeb> CountryWebs => Set<CountryWeb>();
         public DbSet<City> Cities => Set<City>();
         public DbSet<Place> Places => Set<Place>();
         public DbSet<HiddenGem> HiddenGems => Set<HiddenGem>();
         public DbSet<User> Users => Set<User>();
         public DbSet<Feedback> Feedbacks => Set<Feedback>();
         public DbSet<Favorites> Favorites => Set<Favorites>();
+        public DbSet<Travel> Travels => Set<Travel>();
         public DbSet<AppUser> AppUsers => Set<AppUser>();
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

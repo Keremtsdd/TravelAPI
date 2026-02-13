@@ -7,7 +7,7 @@ using TravelAPI.DTOs.HiddenGems;
 namespace TravelAPI.Controllers.Public
 {
     [ApiController]
-    [Route("hiddengems")]
+    [Route("api/[controller]")]
     public class HiddenGemsController : ControllerBase
     {
         private readonly TravelDbContext _context;
