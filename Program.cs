@@ -13,10 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 #region Database
 builder.Services.AddDbContext<TravelDbContext>(options =>
-    options.UseSqlServer(
-        builder.Configuration.GetConnectionString("DefaultConnection")
-    )
-);
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 #endregion
 
 #region CORS
@@ -143,6 +140,15 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+#endregion
+
+
+#region Migration
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<TravelDbContext>();
+    db.Database.Migrate();
+}
 #endregion
 
 #region Seed Logic

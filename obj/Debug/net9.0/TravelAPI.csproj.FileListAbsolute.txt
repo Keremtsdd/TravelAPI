@@ -586,6 +586,8 @@ C:\Users\tastk\OneDrive\Documents\GitHub\MyAPI\bin\Debug\net9.0\Microsoft.OpenAp
 C:\Users\tastk\OneDrive\Documents\GitHub\MyAPI\bin\Debug\net9.0\Microsoft.SqlServer.Server.dll
 C:\Users\tastk\OneDrive\Documents\GitHub\MyAPI\bin\Debug\net9.0\Microsoft.Win32.SystemEvents.dll
 C:\Users\tastk\OneDrive\Documents\GitHub\MyAPI\bin\Debug\net9.0\Mono.TextTemplating.dll
+C:\Users\tastk\OneDrive\Documents\GitHub\MyAPI\bin\Debug\net9.0\Npgsql.dll
+C:\Users\tastk\OneDrive\Documents\GitHub\MyAPI\bin\Debug\net9.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
 C:\Users\tastk\OneDrive\Documents\GitHub\MyAPI\bin\Debug\net9.0\Swashbuckle.AspNetCore.Swagger.dll
 C:\Users\tastk\OneDrive\Documents\GitHub\MyAPI\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Users\tastk\OneDrive\Documents\GitHub\MyAPI\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerUI.dll

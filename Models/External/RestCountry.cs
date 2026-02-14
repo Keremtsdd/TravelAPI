@@ -2,15 +2,17 @@ namespace TravelAPI.Models.External
 {
     public class RestCountry
     {
-        public Name Name { get; set; } = new();
+        public RestCountryName Name { get; set; } = new();
         public string Cca3 { get; set; } = string.Empty;
-        public Flags Flags { get; set; } = new();
+        public RestCountryFlags Flags { get; set; } = new();
     }
-    public class Name
+
+    public class RestCountryName
     {
         public string Common { get; set; } = string.Empty;
     }
-    public class Flags
+
+    public class RestCountryFlags
     {
         public string Png { get; set; } = string.Empty;
     }
