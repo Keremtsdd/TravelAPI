@@ -21,21 +21,22 @@ namespace TravelAPI.Controllers
         }
 
 
-        [HttpPost] // Seyahat Ekle
+        [HttpPost]
         public async Task<IActionResult> CreateTravel(CreateTravelDto dto)
         {
             var travel = _mapper.Map<Travel>(dto);
             travel.Id = Guid.NewGuid();
 
+            if (travel.TravelDate.HasValue)
+            {
+                travel.TravelDate = DateTime.SpecifyKind(travel.TravelDate.Value, DateTimeKind.Utc);
+            }
+            travel.CreatedAt = DateTime.UtcNow;
+
             _context.Travels.Add(travel);
             await _context.SaveChangesAsync();
 
-            return Ok(new
-            {
-                success = true,
-                message = "Seyahat Eklendi",
-                data = travel
-            });
+            return Ok(new { success = true, message = "Seyahat Eklendi", data = travel });
         }
 
         [HttpGet] // Tüm Seyahatleri Getir
@@ -75,8 +76,12 @@ namespace TravelAPI.Controllers
 
             _mapper.Map(dto, travel);
 
-            await _context.SaveChangesAsync();
+            if (travel.TravelDate.HasValue)
+            {
+                travel.TravelDate = DateTime.SpecifyKind(travel.TravelDate.Value, DateTimeKind.Utc);
+            }
 
+            await _context.SaveChangesAsync();
             return Ok(new
             {
                 success = true,

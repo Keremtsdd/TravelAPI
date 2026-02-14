@@ -17,7 +17,6 @@ namespace TravelAPI.Models
 
         public DateTime? TravelDate { get; set; }
 
-        // İsteğe bağlı: kayıt tarihi
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }

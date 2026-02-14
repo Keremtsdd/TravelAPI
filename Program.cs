@@ -9,6 +9,8 @@ using TravelAPI.Models;
 using TravelAPI.Profiles;
 using TravelAPI.Services;
 
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
 var builder = WebApplication.CreateBuilder(args);
 
 #region Database
