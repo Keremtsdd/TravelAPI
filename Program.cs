@@ -22,12 +22,9 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontend", policy =>
     {
         policy
-            .WithOrigins(
-                "http://localhost:5173" // Vite
-            )
+            .AllowAnyOrigin()
             .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials();
+            .AllowAnyMethod();
     });
 });
 #endregion
@@ -144,11 +141,17 @@ app.MapControllers();
 
 
 #region Migration
-using (var scope = app.Services.CreateScope())
+try
 {
+    using var scope = app.Services.CreateScope();
     var db = scope.ServiceProvider.GetRequiredService<TravelDbContext>();
     db.Database.Migrate();
 }
+catch (Exception ex)
+{
+    Console.WriteLine("Migration failed: " + ex.Message);
+}
+
 #endregion
 
 #region Seed Logic
@@ -156,7 +159,7 @@ using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<TravelDbContext>();
 
-    if (!context.Users.Any())
+    if (!context.Users.Any(u => u.UserName == "admin"))
     {
         var admin = new User
         {
