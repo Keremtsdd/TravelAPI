@@ -44,6 +44,10 @@ namespace TravelAPI.Data
                 .WithMany()
                 .HasForeignKey(f => f.PlaceId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<HiddenGem>()
+                .Property(h => h.Rating)
+                .HasPrecision(18, 2);
         }
     }
 }

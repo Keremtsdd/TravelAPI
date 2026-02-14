@@ -26,7 +26,7 @@ namespace TravelAPI.Controllers.Admin
         {
             var gem = _mapper.Map<HiddenGem>(dto);
             gem.Id = Guid.NewGuid();
-            gem.CreatedAt = DateTime.Now;
+            gem.CreatedAt = DateTime.UtcNow;
             gem.IsVerified = true;
 
             _context.HiddenGems.Add(gem);
